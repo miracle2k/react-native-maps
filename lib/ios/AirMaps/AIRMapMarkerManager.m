@@ -42,6 +42,15 @@ RCT_EXPORT_VIEW_PROPERTY(pinColor, UIColor)
 RCT_EXPORT_VIEW_PROPERTY(draggable, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(zIndex, NSInteger)
 RCT_EXPORT_VIEW_PROPERTY(opacity, double)
+RCT_CUSTOM_VIEW_PROPERTY(calloutVisible, BOOL, AIRMapMarker)
+{
+    if (json == nil) {
+        [view forceCalloutVisibility:false visible:NO];
+    }
+    else {
+        [view forceCalloutVisibility:true visible:[RCTConvert BOOL:json]];
+    }
+}
 
 RCT_EXPORT_VIEW_PROPERTY(onPress, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onSelect, RCTDirectEventBlock)

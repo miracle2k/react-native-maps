@@ -25,6 +25,7 @@ NSInteger const AIR_CALLOUT_OPEN_ZINDEX_BASELINE = 999;
     RCTImageLoaderCancellationBlock _reloadImageCancellationBlock;
     MKPinAnnotationView *_pinView;
     BOOL _calloutIsOpen;
+    BOOL _calloutVisiblityForced;
     NSInteger _zIndexBeforeOpen;
 }
 
@@ -147,8 +148,14 @@ NSInteger const AIR_CALLOUT_OPEN_ZINDEX_BASELINE = 999;
     }
 }
 
-- (void)showCalloutView
-{
+- (void)showCalloutView {
+    if (_calloutVisiblityForced && !_calloutIsOpen) {
+        return;
+    }
+    [self _showCalloutView];
+}
+
+- (void)_showCalloutView {
     _calloutIsOpen = YES;
     [self setZIndex:_zIndexBeforeOpen];
     
@@ -235,8 +242,14 @@ NSInteger const AIR_CALLOUT_OPEN_ZINDEX_BASELINE = 999;
     [marker.map selectAnnotation:marker animated:NO];
 }
 
-- (void)hideCalloutView
-{
+- (void)hideCalloutView {
+    if (_calloutVisiblityForced && _calloutIsOpen) {
+        return;
+    }
+    [self _hideCalloutView];
+}
+
+- (void)_hideCalloutView {
     _calloutIsOpen = NO;
     [self setZIndex:_zIndexBeforeOpen];
     // hide the callout view
@@ -302,6 +315,20 @@ NSInteger const AIR_CALLOUT_OPEN_ZINDEX_BASELINE = 999;
                                                                          self.image = image;
                                                                      });
                                                                  }];
+}
+
+- (void)forceCalloutVisibility:(bool)force visible:(bool)shouldBeVisible
+{
+    _calloutVisiblityForced = force;
+
+    if (force) {
+        if (!shouldBeVisible && _calloutIsOpen) {
+            [self _hideCalloutView];
+        }
+        else if (shouldBeVisible && !_calloutIsOpen) {
+            [self _showCalloutView];
+        }
+    }
 }
 
 - (void)setPinColor:(UIColor *)pinColor

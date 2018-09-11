@@ -47,6 +47,7 @@
 - (MKAnnotationView *)getAnnotationView;
 - (void)fillCalloutView:(SMCalloutView *)calloutView;
 - (BOOL)shouldShowCalloutView;
+- (void)forceCalloutVisibility:(bool)force visible:(bool)shouldBeVisible;
 - (void)showCalloutView;
 - (void)hideCalloutView;
 - (void)addTapGestureRecognizer;
